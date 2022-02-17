@@ -36,6 +36,13 @@ public class BuyerServiceImpl implements BuyerService{
 		  
 		  return bidDetails;
 	}
+	  
+	  public int getCount(String productId){
+		  
+		  int size = bidRepository.getCount(productId);
+		  
+		  return size;
+	}
 	 
 	
 }

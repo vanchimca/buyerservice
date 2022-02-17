@@ -12,5 +12,6 @@ public interface BuyerService {
 	public String saveBidDetails(BidDetails bidDetails);
 	public List<BidDetails> retrieveBids(String productId);
 	public List<BidDetails> updateBidPice(String _id, String mail, Double bidPrice);
+	public int getCount(String productId);
 	
 }

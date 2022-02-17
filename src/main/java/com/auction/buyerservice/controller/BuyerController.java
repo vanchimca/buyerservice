@@ -44,4 +44,11 @@ public class BuyerController {
 		List<BidDetails> bidDetails =buyerService.updateBidPice(_id, mail, bidPrice);
 		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);  
 	}
+	
+	@GetMapping("/e-auction/api/v1/buyer/getCount/{productId}")
+	public ResponseEntity<Integer> getCount(@PathVariable("productId") String productId)  
+	{  
+		int size =buyerService.getCount(productId);
+		return  ResponseEntity.status(HttpStatus.OK).body(size);  
+	}
 }
