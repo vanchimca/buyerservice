@@ -36,4 +36,16 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
         return bidDetails;
 
     }
+	
+	@Override
+    public int getCount(String productId) {
+		Query query = new Query();
+		
+		query.addCriteria(Criteria.where("productId").exists(true));
+		
+		List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
+		
+		return bidDetails.size();
+		
+    }
 }
