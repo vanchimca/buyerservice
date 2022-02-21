@@ -9,5 +9,5 @@ import com.auction.buyerservice.model.BidDetails;
 
 public interface BidRepository extends MongoRepository<BidDetails, String>, BidRepositoryCustom {
 
-		List<BidDetails> findByProductId(String productId);
+		
 }

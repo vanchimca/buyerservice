@@ -11,6 +11,11 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.auction.buyerservice.model.BidDetails;
 import com.mongodb.client.result.UpdateResult;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+
 public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 
 	@Autowired
@@ -48,4 +53,18 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 		return bidDetails.size();
 		
     }
+	
+	@Override
+	public List<BidDetails> findByProductId(String productId){
+		
+		Query query = new Query();
+		query.with(PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC,"bidAmount")));
+		query.addCriteria(Criteria.where("productId").exists(true));
+		
+		
+		List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
+		
+		return bidDetails;
+		
+	}
 }
