@@ -17,7 +17,7 @@ public class BidDetails {
 	String city;
 	String state;
 	Integer pin;
-	Integer phone;
+	long phone;
 	String mail;
 	/**
 	 * @return the _id
@@ -130,13 +130,13 @@ public class BidDetails {
 	/**
 	 * @return the phone
 	 */
-	public Integer getPhone() {
+	public long getPhone() {
 		return phone;
 	}
 	/**
 	 * @param phone the phone to set
 	 */
-	public void setPhone(Integer phone) {
+	public void setPhone(long phone) {
 		this.phone = phone;
 	}
 	/**

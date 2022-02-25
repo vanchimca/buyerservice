@@ -46,7 +46,8 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
     public int getCount(String productId) {
 		Query query = new Query();
 		
-		query.addCriteria(Criteria.where("productId").exists(true));
+		query.addCriteria(Criteria.where("productId").exists(true)
+				.andOperator(Criteria.where("productId").is(productId)));
 		
 		List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
 		
@@ -59,7 +60,8 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 		
 		Query query = new Query();
 		query.with(PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC,"bidAmount")));
-		query.addCriteria(Criteria.where("productId").exists(true));
+		query.addCriteria(Criteria.where("productId").exists(true)
+				.andOperator(Criteria.where("productId").is(productId)));
 		
 		
 		List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
