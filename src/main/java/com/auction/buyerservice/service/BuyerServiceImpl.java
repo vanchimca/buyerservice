@@ -43,6 +43,10 @@ public class BuyerServiceImpl implements BuyerService{
 		  
 		  return size;
 	}
+	  
+	  public Boolean isBidPlaced(String productId, String mail) {
+		   return bidRepository.isBidPalced(productId, mail);
+	  }
 	 
 	
 }

@@ -13,5 +13,6 @@ public interface BuyerService {
 	public List<BidDetails> retrieveBids(String productId);
 	public List<BidDetails> updateBidPice(String _id, String mail, Double bidPrice);
 	public int getCount(String productId);
+	public Boolean isBidPlaced(String productId, String mail);
 	
 }

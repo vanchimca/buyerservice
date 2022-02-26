@@ -28,9 +28,13 @@ public class BuyerController {
 	@PostMapping("/e-auction/api/v1/buyer/place-bid")
 	public ResponseEntity<String> placeBid(@RequestBody BidDetails bidDetails){
 		
-		buyerService.saveBidDetails(bidDetails);
-		System.out.println("id -- "+bidDetails.get_id());
-		return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
+		if(buyerService.isBidPlaced(bidDetails.getProductId(), bidDetails.getMail())) {
+			return  ResponseEntity.status(HttpStatus.OK).body("Bid can not be placed by the same user for the same product");
+		}else {
+			buyerService.saveBidDetails(bidDetails);
+			return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
+			
+		}
 	}
 	
 	@GetMapping("/e-auction/api/v1/buyer/bids/{productId}")

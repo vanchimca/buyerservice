@@ -69,4 +69,22 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 		return bidDetails;
 		
 	}
+	
+	@Override
+	public Boolean isBidPalced(String productId, String mail) {
+		
+		Query query = new Query();
+		query.addCriteria(Criteria.where("productId").exists(true)
+				.andOperator(Criteria.where("productId").is(productId),Criteria.where("mail").is(mail)));
+				//.andOperator(Criteria.where("mail").is(mail)));
+		
+		List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
+		if(bidDetails.size() > 0) {
+			return true;
+		}else {
+			return false;
+		}
+		
+		
+	}
 }
