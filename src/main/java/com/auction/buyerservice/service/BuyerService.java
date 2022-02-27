@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.auction.buyerservice.model.BidDetails;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 
 public interface BuyerService {
 
 	public String saveBidDetails(BidDetails bidDetails);
-	public List<BidDetails> retrieveBids(String productId);
+	public List<BidDetails> retrieveBids(String productId) throws JsonProcessingException;
 	public List<BidDetails> updateBidPice(String _id, String mail, Double bidPrice);
 	public int getCount(String productId);
 	public Boolean isBidPlaced(String productId, String mail);

@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.auction.buyerservice.kafka.KafkaConsumer;
 import com.auction.buyerservice.model.BidDetails;
 import com.auction.buyerservice.repository.BidRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 
@@ -16,6 +18,9 @@ public class BuyerServiceImpl implements BuyerService{
 	
 	@Autowired
 	BidRepository bidRepository;
+	
+	@Autowired
+	KafkaConsumer kafkaConsumer;
 
 	public String saveBidDetails(BidDetails bidDetails) {
 		
@@ -23,9 +28,10 @@ public class BuyerServiceImpl implements BuyerService{
 		return "Saved Succesfully";
 	}
 	
-	public List<BidDetails> retrieveBids(String productId){
+	public List<BidDetails> retrieveBids(String productId) throws JsonProcessingException{
 		
-		List<BidDetails> bidDetails = bidRepository.findByProductId(productId);
+		List<BidDetails> bidDetails =kafkaConsumer.retrieveBids(productId);
+		//List<BidDetails> bidDetails = bidRepository.findByProductId(productId);
 		return bidDetails;
 	}
 	

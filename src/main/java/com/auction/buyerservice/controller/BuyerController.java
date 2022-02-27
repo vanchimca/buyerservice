@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.auction.buyerservice.kafka.KafkaConsumer;
 import com.auction.buyerservice.model.BidDetails;
 import com.auction.buyerservice.service.BuyerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 
 
 
@@ -24,6 +29,16 @@ public class BuyerController {
 
 	@Autowired
 	BuyerService buyerService;
+	
+	@Autowired
+	private ConcurrentKafkaListenerContainerFactory<String, BidDetails> factory;
+	
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
+	
+	/*
+	 * @Autowired private KafkaConsumer kafkaConsumer;
+	 */
 	
 	@PostMapping("/e-auction/api/v1/buyer/place-bid")
 	public ResponseEntity<String> placeBid(@RequestBody BidDetails bidDetails){
@@ -38,11 +53,28 @@ public class BuyerController {
 	}
 	
 	@GetMapping("/e-auction/api/v1/buyer/bids/{productId}")
-	public ResponseEntity<List<BidDetails>> retrieveBids(@PathVariable("productId") String productId)  
+	public ResponseEntity<List<BidDetails>> retrieveBids(@PathVariable("productId") String productId) throws JsonProcessingException  
 	{  
+		/*List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
+		//kafkaTemplate.send(ApplicationConstants.TOPIC_NAME, productId);
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
+		/*
+		 * ConsumerFactory consumerFactory = factory.getConsumerFactory();
+		 * Consumer<String, BidDetails> consumer = consumerFactory.createConsumer(); try
+		 * { consumer.subscribe(Arrays.asList(ApplicationConstants.TOPIC_NAME));
+		 * ConsumerRecords consumerRecords = consumer.poll(0);
+		 * Iterable<ConsumerRecord<String, BidDetails>> records =
+		 * consumerRecords.records(ApplicationConstants.TOPIC_NAME);
+		 * Iterator<ConsumerRecord<String, BidDetails>> iterator = records.iterator();
+		 * 
+		 * while (iterator.hasNext()) { bidDetails.add(iterator.next().value()); }
+		 * 
+		 * } catch (Exception e) { e.printStackTrace(); }
+		 */
 		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);  
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
 	}
+	
 	
 	@PutMapping("/e-auction/api/v1/buyer/bids/{_id}/{mail}/{bidPrice}")
 	public ResponseEntity<List<BidDetails>> updateBidPrice(@PathVariable("_id") String _id, @PathVariable String mail, @PathVariable Double bidPrice)  
