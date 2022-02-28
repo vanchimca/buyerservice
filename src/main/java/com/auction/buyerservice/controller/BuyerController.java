@@ -76,11 +76,11 @@ public class BuyerController {
 	}
 	
 	
-	@PutMapping("/e-auction/api/v1/buyer/bids/{_id}/{mail}/{bidPrice}")
-	public ResponseEntity<List<BidDetails>> updateBidPrice(@PathVariable("_id") String _id, @PathVariable String mail, @PathVariable Double bidPrice)  
+	@GetMapping("/e-auction/api/v1/buyer/updateBid/{_id}/{mail}/{bidPrice}")
+	public ResponseEntity<String> updateBidPrice(@PathVariable("_id") String _id, @PathVariable String mail, @PathVariable Double bidPrice)  
 	{  
 		List<BidDetails> bidDetails =buyerService.updateBidPice(_id, mail, bidPrice);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);  
+		return  ResponseEntity.status(HttpStatus.OK).body("Bid amount updated successfully");  
 	}
 	
 	@GetMapping("/e-auction/api/v1/buyer/getCount/{productId}")
