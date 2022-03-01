@@ -1,8 +1,11 @@
 package com.auction.buyerservice.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -10,11 +13,6 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import com.auction.buyerservice.model.BidDetails;
 import com.mongodb.client.result.UpdateResult;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 
 public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 
@@ -36,9 +34,12 @@ public class BidRepositoryCustomImpl implements BidRepositoryCustom{
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, BidDetails.class);
         
-        List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
+		/*
+		 * List<BidDetails> bidDetails = mongoTemplate.find(query, BidDetails.class);
+		 * return bidDetails;
+		 */
+        return mongoTemplate.find(query, BidDetails.class).stream().collect(Collectors.toList());
         
-        return bidDetails;
 
     }
 	
