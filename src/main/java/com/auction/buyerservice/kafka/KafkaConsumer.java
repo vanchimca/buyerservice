@@ -22,12 +22,25 @@ public class KafkaConsumer {
 	
 	@Autowired
 	BidRepository bidRepository;
-
+	
+	/*
+	 * @Autowired BuyerService buyerService;
+	 */
+	
 	@KafkaListener(groupId = ApplicationConstants.GROUP_ID_JSON, topics = ApplicationConstants.TOPIC_NAME, containerFactory = ApplicationConstants.KAFKA_LISTENER_CONTAINER_FACTORY)
 	public List<BidDetails> retrieveBids(String productId) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		List<BidDetails> bidDetails =bidRepository.findByProductId(productId);
 		
 		return bidDetails;
+	}
+	
+	@KafkaListener(groupId = ApplicationConstants.GROUP_ID_COMMAND, topics = ApplicationConstants.TOPIC_NAME_COMMAND, containerFactory = ApplicationConstants.KAFKA_LISTENER_CONTAINER_FACTORY)
+	public String placeBids(BidDetails bidDetails) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		//List<BidDetails> bidDetails =bidRepository.findByProductId(productId);
+		bidRepository.save(bidDetails);
+		
+		return "Bid Placed Successfully";
 	}
 }

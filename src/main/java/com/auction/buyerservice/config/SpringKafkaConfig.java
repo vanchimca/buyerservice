@@ -32,7 +32,8 @@ public class SpringKafkaConfig {
 		configMap.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ApplicationConstants.KAFKA_LOCAL_SERVER_CONFIG);
 		configMap.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configMap.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		//configMap.put(JsonDeserializer.TRUSTED_PACKAGES, "com.netsurfingzone.dto");
+		configMap.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+		configMap.put(JsonDeserializer.TRUSTED_PACKAGES, "com.auction.buyerservice.model");
 		return new DefaultKafkaProducerFactory<String, Object>(configMap);
 	}
 
@@ -47,9 +48,10 @@ public class SpringKafkaConfig {
 		configMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, ApplicationConstants.KAFKA_LOCAL_SERVER_CONFIG);
 		configMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		configMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 		configMap.put(ConsumerConfig.GROUP_ID_CONFIG, ApplicationConstants.GROUP_ID_JSON);
 		configMap.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1000);
-		//configMap.put(JsonDeserializer.TRUSTED_PACKAGES, "com.netsurfingzone.dto");
+		configMap.put(JsonDeserializer.TRUSTED_PACKAGES, "com.auction.buyerservice.model");
 		return new DefaultKafkaConsumerFactory<>(configMap);
 	}
 

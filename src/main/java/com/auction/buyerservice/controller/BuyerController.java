@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.auction.buyerservice.config.ApplicationConstants;
 import com.auction.buyerservice.kafka.KafkaConsumer;
 import com.auction.buyerservice.model.BidDetails;
 import com.auction.buyerservice.service.BuyerService;
@@ -54,6 +55,7 @@ public class BuyerController {
 				return  ResponseEntity.status(HttpStatus.OK).body("Bid can not be placed by the same user for the same product");
 			}else {
 				buyerService.saveBidDetails(bidDetails);
+				//kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
 				return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");				
 			}
 		}else {
@@ -65,10 +67,10 @@ public class BuyerController {
 	@GetMapping("/e-auction/api/v1/buyer/bids/{productId}")
 	public ResponseEntity<List<BidDetails>> retrieveBids(@PathVariable("productId") String productId) throws JsonProcessingException  
 	{  
-		/*List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
-		//kafkaTemplate.send(ApplicationConstants.TOPIC_NAME, productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
-		/*
+		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);		
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
+		
+		/*kafkaTemplate.send(ApplicationConstants.TOPIC_NAME, productId);
 		 * ConsumerFactory consumerFactory = factory.getConsumerFactory();
 		 * Consumer<String, BidDetails> consumer = consumerFactory.createConsumer(); try
 		 * { consumer.subscribe(Arrays.asList(ApplicationConstants.TOPIC_NAME));
@@ -80,9 +82,9 @@ public class BuyerController {
 		 * while (iterator.hasNext()) { bidDetails.add(iterator.next().value()); }
 		 * 
 		 * } catch (Exception e) { e.printStackTrace(); }
-		 */
+		 // Working Kafka
 		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
 	}
 	
 	
