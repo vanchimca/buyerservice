@@ -22,92 +22,66 @@ import com.auction.buyerservice.config.ApplicationConstants;
 import com.auction.buyerservice.kafka.KafkaConsumer;
 import com.auction.buyerservice.model.BidDetails;
 import com.auction.buyerservice.service.BuyerService;
+import com.auction.buyerservice.service.BuyerServiceQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-
-
-
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200",  "http://localhost:8090"})
+@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8090" })
 public class BuyerController {
 
 	@Autowired
 	BuyerService buyerService;
 	
 	@Autowired
+	BuyerServiceQuery buyerServiceQuery;
+
+	@Autowired
 	private ConcurrentKafkaListenerContainerFactory<String, BidDetails> factory;
-	
+
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	/*
 	 * @Autowired private KafkaConsumer kafkaConsumer;
 	 */
-	
+
 	@PostMapping("/e-auction/api/v1/buyer/place-bid")
-	public ResponseEntity<String> placeBid(@RequestBody BidDetails bidDetails){
-		Map<String, String> uriVariables=new HashMap<>();
+	public ResponseEntity<String> placeBid(@RequestBody BidDetails bidDetails) {
+		Map<String, String> uriVariables = new HashMap<>();
 		uriVariables.put("productId", bidDetails.getProductId());
-		//calling the currency exchange service
-		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity("http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
-		if(responseEntity.getBody()) {
-			if(buyerService.isBidPlaced(bidDetails.getProductId(), bidDetails.getMail())) {
-				return  ResponseEntity.status(HttpStatus.OK).body("Bid can not be placed by the same user for the same product");
-			}else {
+		// calling the currency exchange service
+		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
+				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+		if (responseEntity.getBody()) {
+			if (buyerServiceQuery.isBidPlaced(bidDetails.getProductId(), bidDetails.getMail())) {
+				return ResponseEntity.status(HttpStatus.OK)
+						.body("Bid can not be placed by the same user for the same product");
+			} else {
 				buyerService.saveBidDetails(bidDetails);
-				//kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
-				return  ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");				
+				// kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
+				return ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
 			}
-		}else {
-			return  ResponseEntity.status(HttpStatus.OK).body("Bid can not be added after bid end date");
+		} else {
+			return ResponseEntity.status(HttpStatus.OK).body("Bid can not be added after bid end date");
 		}
-		
+
 	}
-	
-	@GetMapping("/e-auction/api/v1/buyer/bids/{productId}")
-	public ResponseEntity<List<BidDetails>> retrieveBids(@PathVariable("productId") String productId) throws JsonProcessingException  
-	{  
-		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);		
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
-		
-		/*kafkaTemplate.send(ApplicationConstants.TOPIC_NAME, productId);
-		 * ConsumerFactory consumerFactory = factory.getConsumerFactory();
-		 * Consumer<String, BidDetails> consumer = consumerFactory.createConsumer(); try
-		 * { consumer.subscribe(Arrays.asList(ApplicationConstants.TOPIC_NAME));
-		 * ConsumerRecords consumerRecords = consumer.poll(0);
-		 * Iterable<ConsumerRecord<String, BidDetails>> records =
-		 * consumerRecords.records(ApplicationConstants.TOPIC_NAME);
-		 * Iterator<ConsumerRecord<String, BidDetails>> iterator = records.iterator();
-		 * 
-		 * while (iterator.hasNext()) { bidDetails.add(iterator.next().value()); }
-		 * 
-		 * } catch (Exception e) { e.printStackTrace(); }
-		 // Working Kafka
-		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
-	}
-	
-	
+
+
 	@GetMapping("/e-auction/api/v1/buyer/updateBid/{_id}/{mail}/{bidPrice}/{productId}")
-	public ResponseEntity<String> updateBidPrice(@PathVariable("_id") String _id, @PathVariable String mail, @PathVariable Double bidPrice, @PathVariable String productId)  
-	{  
-		Map<String, String> uriVariables=new HashMap<>();
+	public ResponseEntity<String> updateBidPrice(@PathVariable("_id") String _id, @PathVariable String mail,
+			@PathVariable Double bidPrice, @PathVariable String productId) {
+		Map<String, String> uriVariables = new HashMap<>();
 		uriVariables.put("productId", productId);
-		//calling the currency exchange service
-		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity("http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
-		if(responseEntity.getBody()) {
-			List<BidDetails> bidDetails =buyerService.updateBidPice(_id, mail, bidPrice);
-			return  ResponseEntity.status(HttpStatus.OK).body("Bid amount updated successfully"); 
-		}else {
-			return  ResponseEntity.status(HttpStatus.OK).body("Bid can not be updated after bid end date");
+		// calling the currency exchange service
+		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
+				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+		if (responseEntity.getBody()) {
+			List<BidDetails> bidDetails = buyerService.updateBidPice(_id, mail, bidPrice);
+			return ResponseEntity.status(HttpStatus.OK).body("Bid amount updated successfully");
+		} else {
+			return ResponseEntity.status(HttpStatus.OK).body("Bid can not be updated after bid end date");
 		}
-		 
-	}
-	
-	@GetMapping("/e-auction/api/v1/buyer/getCount/{productId}")
-	public ResponseEntity<Integer> getCount(@PathVariable("productId") String productId)  
-	{  
-		int size =buyerService.getCount(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(size);  
+
 	}
 }
