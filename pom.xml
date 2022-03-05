@@ -54,7 +54,7 @@
     		<artifactId>springdoc-openapi-ui</artifactId>
     		<version>1.6.4</version>
 		</dependency>
-		<dependency>  
+		<!-- <dependency>  
 			<groupId>org.springframework.cloud</groupId>    
 			<artifactId>spring-cloud-starter-feign</artifactId>  
 			<version>1.4.4.RELEASE</version>  
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
