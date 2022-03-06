@@ -26,7 +26,8 @@ import com.auction.buyerservice.service.BuyerServiceQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://sellerservice.us-east-1.elasticbeanstalk.com/"})
+//@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://sellerservice.us-east-1.elasticbeanstalk.com/"})
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BuyerController {
 
 	@Autowired
