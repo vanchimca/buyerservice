@@ -17,7 +17,7 @@ import com.auction.buyerservice.service.BuyerServiceQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-@CrossOrigin(origins = { "http://eauction.s3-website-us-east-1.amazonaws.com/", "http://ec2-3-88-0-13.compute-1.amazonaws.com:8090" })
+@CrossOrigin(origins = {"http://localhost:4200",  "http://localhost:8090"})
 
 public class BuyerQueryController {
 	
@@ -30,8 +30,8 @@ public class BuyerQueryController {
 	@GetMapping("/e-auction/api/v1/buyer/bids/{productId}")
 	public ResponseEntity<List<BidDetails>> retrieveBids(@PathVariable("productId") String productId) throws JsonProcessingException  
 	{  
-		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);		
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
+		/*List<BidDetails> bidDetails =buyerService.retrieveBids(productId);		
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
 		
 		/*kafkaTemplate.send(ApplicationConstants.TOPIC_NAME, productId);
 		 * ConsumerFactory consumerFactory = factory.getConsumerFactory();
@@ -44,11 +44,11 @@ public class BuyerQueryController {
 		 * 
 		 * while (iterator.hasNext()) { bidDetails.add(iterator.next().value()); }
 		 * 
-		 * } catch (Exception e) { e.printStackTrace(); }
+		 * } catch (Exception e) { e.printStackTrace(); }*/
 		 
-		 // Working Kafka
+		 //Working Kafka
 		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
-		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
+		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);
 	}
 	
 	@GetMapping("/e-auction/api/v1/buyer/getCount/{productId}")

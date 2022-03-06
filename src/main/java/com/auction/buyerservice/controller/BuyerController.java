@@ -26,7 +26,7 @@ import com.auction.buyerservice.service.BuyerServiceQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-@CrossOrigin(origins = { "http://eauction.s3-website-us-east-1.amazonaws.com/", "http://ec2-3-88-0-13.compute-1.amazonaws.com:8090" })
+@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8090" })
 public class BuyerController {
 
 	@Autowired
@@ -51,14 +51,14 @@ public class BuyerController {
 		uriVariables.put("productId", bidDetails.getProductId());
 		// calling the currency exchange service
 		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
-				"http://ec2-3-88-0-13.compute-1.amazonaws.com:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
 		if (responseEntity.getBody()) {
 			if (buyerServiceQuery.isBidPlaced(bidDetails.getProductId(), bidDetails.getMail())) {
 				return ResponseEntity.status(HttpStatus.OK)
 						.body("Bid can not be placed by the same user for the same product");
 			} else {
-				buyerService.saveBidDetails(bidDetails);
-				// kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
+				//buyerService.saveBidDetails(bidDetails);
+				 kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
 				return ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
 			}
 		} else {
@@ -75,7 +75,7 @@ public class BuyerController {
 		uriVariables.put("productId", productId);
 		// calling the currency exchange service
 		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
-				"http://ec2-3-88-0-13.compute-1.amazonaws.com:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
 		if (responseEntity.getBody()) {
 			List<BidDetails> bidDetails = buyerService.updateBidPice(_id, mail, bidPrice);
 			return ResponseEntity.status(HttpStatus.OK).body("Bid amount updated successfully");
