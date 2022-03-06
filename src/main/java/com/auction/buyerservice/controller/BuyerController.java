@@ -51,7 +51,7 @@ public class BuyerController {
 		uriVariables.put("productId", bidDetails.getProductId());
 		// calling the currency exchange service
 		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
-				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+				"http://ec2-3-88-0-13.compute-1.amazonaws.com:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
 		if (responseEntity.getBody()) {
 			if (buyerServiceQuery.isBidPlaced(bidDetails.getProductId(), bidDetails.getMail())) {
 				return ResponseEntity.status(HttpStatus.OK)
@@ -75,7 +75,7 @@ public class BuyerController {
 		uriVariables.put("productId", productId);
 		// calling the currency exchange service
 		ResponseEntity<Boolean> responseEntity = new RestTemplate().getForEntity(
-				"http://localhost:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
+				"http://ec2-3-88-0-13.compute-1.amazonaws.com:8090/e-auction/api/v1/seller/bidEligible/{productId}", Boolean.class, uriVariables);
 		if (responseEntity.getBody()) {
 			List<BidDetails> bidDetails = buyerService.updateBidPice(_id, mail, bidPrice);
 			return ResponseEntity.status(HttpStatus.OK).body("Bid amount updated successfully");

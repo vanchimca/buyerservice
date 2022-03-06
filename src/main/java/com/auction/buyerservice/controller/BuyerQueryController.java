@@ -17,7 +17,7 @@ import com.auction.buyerservice.service.BuyerServiceQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
-@CrossOrigin(origins = {"http://eauction.s3-website-us-east-1.amazonaws.com/",  "http://ec2-3-88-0-13.compute-1.amazonaws.com:8090"})
+@CrossOrigin(origins = { "http://eauction.s3-website-us-east-1.amazonaws.com/", "http://ec2-3-88-0-13.compute-1.amazonaws.com:8090" })
 
 public class BuyerQueryController {
 	
@@ -45,6 +45,7 @@ public class BuyerQueryController {
 		 * while (iterator.hasNext()) { bidDetails.add(iterator.next().value()); }
 		 * 
 		 * } catch (Exception e) { e.printStackTrace(); }
+		 
 		 // Working Kafka
 		List<BidDetails> bidDetails =buyerService.retrieveBids(productId);
 		return  ResponseEntity.status(HttpStatus.OK).body(bidDetails);*/
