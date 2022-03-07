@@ -57,8 +57,8 @@ public class BuyerController {
 				return ResponseEntity.status(HttpStatus.OK)
 						.body("Bid can not be placed by the same user for the same product");
 			} else {
-				buyerService.saveBidDetails(bidDetails);
-				// kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
+				//buyerService.saveBidDetails(bidDetails);
+				 kafkaTemplate.send(ApplicationConstants.TOPIC_NAME_COMMAND, bidDetails);
 				return ResponseEntity.status(HttpStatus.OK).body("Saved Successfully");
 			}
 		} else {
